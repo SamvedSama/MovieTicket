@@ -1,10 +1,5 @@
 import tkinter
-import random
 import pymongo 
-import json
-
-usrinfo = {}
-dict = {}
 
 myclient = pymongo.MongoClient("mongodb://localhost:27017/")
 mydb = myclient["User_Details"]
@@ -27,7 +22,7 @@ def login_user():
         for z in y:
             if user==z and password==y[z]:
                 print(f"Logged in as {user} successfully! ")
-            else:
+            elif(user != z and password != y[z]):
                 print("Wrong Username or Password detected.")
 def display_movies():
     movie_list = ["Kantaara","KGF","Modiji","Motte","ChakDeIndia"]
