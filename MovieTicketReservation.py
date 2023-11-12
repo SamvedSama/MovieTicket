@@ -4,11 +4,12 @@ import pymongo
 import json
 
 usrinfo = {}
+dict = {}
 
 myclient = pymongo.MongoClient("mongodb://localhost:27017/")
 mydb = myclient["User_Details"]
-mycol = mydb["user"]
-
+collection = mydb["user"]
+x = mydb.collection.find({},{'_id':0})
 
 def welcome():
     print("Welcome to Movie Ticket Reservation System")
@@ -16,20 +17,24 @@ def welcome():
 def create_user():
     user = input("Please enter your name: ")
     password = input("Please enter your password here: ")
-    mydb.mycol.insert_one({user:password})
+    mydb.collection.insert_one({user:password})
     print("User Successfully Created")
 
 def login_user():
     user = input("Please enter your name: ")
     password = input("Please enter your password here: ")
-    if mycol.find({"name":user,"password":password})==(user,password):
-        print(f"Logged in as {user} successfully! ")
-    else:
-        print("Entered password or username is incorrect")
+    for y in x:
+        for z in y:
+            if user==z and password==y[z]:
+                print(f"Logged in as {user} successfully! ")
+            else:
+                print("Wrong Username or Password detected.")
 def display_movies():
-    movie_list = ["Kantaara","KGF","Modiji","Motte","Chak De India"]
-    for i in range(len(movie_list)):
-        print(i,end="")
+    movie_list = ["Kantaara","KGF","Modiji","Motte","ChakDeIndia"]
+    print("The movie options are: ")
+    for i in movie_list:
+        print(i,end=" ")
+    print()
 
 def main_menu():
     while True:
@@ -43,7 +48,6 @@ def main_menu():
             ch = int(input("Enter your choice (1/2/3/4) here: "))
             if ch == 1:
                 create_user()
-                
             elif ch == 2:
                 login_user()
             elif ch==3:
