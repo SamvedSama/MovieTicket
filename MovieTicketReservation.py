@@ -7,7 +7,7 @@ myclient = pymongo.MongoClient("mongodb://localhost:27017/")
 mydb = myclient["User_Details"]
 collection = mydb["user"]
 dict = {}
-mydb2 = myclient["Movie_Details"]
+mydb2 = myclient["Movie_details"]
 movies = mydb2["Movies"]
 dict1 = {}
 uname = ''
@@ -71,6 +71,11 @@ def after_login():
                 print("Please enter a valid number from the given options only")
         except ValueError:
             print("Invalid Input! Please Enter a Number.")
+
+
+
+
+
 def book():
     while True :
         print("Please select number corresponding to the movie from the options given below to book a seat or 6 to exit: ")
@@ -156,16 +161,9 @@ def seat_book():
     mydb.collection.update_many({},{"$set" : {'Reserved' : num_seats}})
     #START HERE DB2 UPDATE NOT WORKING
     mydb2.movies.update_one({"_id": "ObjectId('6551eb31de2dcf70e6d15a57')"},{"$inc" : {'seats_available':2}})      
-    print(f"Seats Available for {movie_name} is: ",seats_available)
 
-    for i in range(num_of_seats):
-        num_seat = list(input("Enter the number(s) seats would you like to reserve(1-64)? ").split(" "))
-        while True:
-            for i in num_seat:
-                if i not in range(1,65):
-                    print("Please enter within the given seat limits")
-                    num_of_seats[num_seat.index(i)] = int(input("Enter proper seat number"))                                      #Update reserved values to database and update the available seats
-                    
+
+
 def login_user():
     echeck = input("Enter Email you signed Up with: ")
     user = input("Please enter your name: ")
@@ -197,6 +195,9 @@ def display_movies():
     print("The movies available are: ")
     for i in range(len(movie_list)):
             print((i+1),".",movie_list[i])
+
+
+
 
 
 def main_menu():
