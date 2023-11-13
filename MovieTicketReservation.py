@@ -21,7 +21,7 @@ def create_user():
     if password == password2 :
         c2 = encrypt(password)
         mydb.collection.insert_one({user:c2,'email':email})
-        print("User Created")
+        print("User Created Successfully")
     else :
         print("Passwords do not match, please try again.")
 
@@ -55,12 +55,6 @@ def after_login():
                 print("Please enter a valid number from the given options only")
         except ValueError:
             print("Invalid Input! Please Enter a Number.")
-
-def movie_numbers():
-    movie_list = ["1.Kantaara","2.KGF","3.Modiji","4.Motte","5.ChakDeIndia"]
-    print("The movie available are: ")
-    for i in movie_list:
-        print(i)
 
 def book():
     while True :
@@ -99,6 +93,33 @@ def reserve(movie_name): #MongoDB new database consisting of movie names is to b
         for z in y :
             seats_available = y[z]
     print("Seats Available  = ",seats_available)
+
+def seat_book():
+    total_seats = 64
+    seat_layout = []
+    k=1
+    for i in range(1,9):
+        row = []
+        for j in range(1,9):
+            row.append(k)
+            k+=1
+        seat_layout.append(row)
+    for ele in seat_layout:
+        print(ele)
+    while True:
+        num_of_seats = int(input("How many seats would you like to reserve? "))
+        if num_of_seats>total_seats:
+                print("Please enter seats within available limit.")
+        else:
+            break
+    for i in range(num_of_seats):
+        num_seat = list(input("Enter the number(s) seats would you like to reserve(1-64)? ").split(" "))
+        while True:
+            for i in num_seat:
+                if i not in range(1,65):
+                    print("Please enter within the given seat limits")
+                    num_of_seats[num_seat.index(i)] = int(input("Enter proper seat number"))                                      #Update reserved values to database and update the available seats
+                    
 def login_user():
     echeck = input("Enter Email you signed Up with: ")
     user = input("Please enter your name: ")
@@ -111,17 +132,16 @@ def login_user():
         for z in y:
             dict[z]=y[z]
     if user in dict and dict[user]==encrypt(password):
-        print(f"Login as {user} Successfull")
+        print(f"Login as {user} Successful")
         after_login()
     else :
         print("Entered Credentials do not match") 
 
 def display_movies():
     movie_list = ["Kantaara","KGF","Modiji","Motte","ChakDeIndia"]
-    print("The movie available are: ")
-    for i in movie_list:
-        print(i,end=" ")
-    print()
+    print("The movies available are: ")
+    for i in range(len(movie_list)):
+            print((i+1),".",movie_list[i])
 
 
 def main_menu():
