@@ -7,7 +7,7 @@ myclient = pymongo.MongoClient("mongodb://localhost:27017/")
 mydb = myclient["User_Details"]
 collection = mydb["user"]
 dict = {}
-mydb2 = myclient["Movie_Details"]
+mydb2 = myclient["Movie_details"]
 movies = mydb2["Movies"]
 dict1 = {}
 def welcome():
@@ -99,6 +99,7 @@ def reserve(movie_name): #MongoDB new database consisting of movie names is to b
         for z in y :
             seats_available = y[z]
     print("Seats Available  = ",seats_available)
+    print(f"Seats Available for {movie_name} is: ",seats_available)
 def login_user():
     echeck = input("Enter Email you signed Up with: ")
     user = input("Please enter your name: ")
