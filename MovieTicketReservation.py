@@ -20,11 +20,11 @@ def login_user():
     password = input("Please enter your password here: ")
     for y in x:
         for z in y:
-            
-            if user==z and password==y[z]:
-                print(f"Logged in as {user} successfully! ")
-            elif(user != z and password != y[z]):
-                print("Wrong Username or Password detected.")
+            dict[z]=y[z]
+    if user in dict and dict[user]==password:
+        print(f"Login as {user} Successfull")
+    else :
+        print("Check your Credentials") 
 def display_movies():
     movie_list = ["Kantaara","KGF","Modiji","Motte","ChakDeIndia"]
     print("The movie options are: ")
