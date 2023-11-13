@@ -72,38 +72,40 @@ def after_login():
             print("Invalid Input! Please Enter a Number.")
 
 def book():
-    print("Please select number corresponding to the movie from the options given below or 6 to exit: ")
-    movie_numbers()
-    try:
-        ch = int(input("Enter your choice (1/2/3/4) here: "))
-        if ch == 1:
-            reserve(movie_numbers.movie_list[ch-1])
-        elif ch == 2:
-            reserve(movie_numbers.movie_list[ch-1])
-        elif ch==3:
-            reserve(movie_numbers.movie_list[ch-1])
-        elif ch==4:
-            reserve(movie_numbers.movie_list[ch-1])
-        elif ch==5:
-            reserve(movie_numbers.movie_list[ch-1])
-        elif ch==6:
-            exit()
-        else:
-            print("Please enter a valid number from the given options only")
-    except ValueError:
-            print("Invalid Input! Please Enter a Number.")
+    while True:
+        print("Please select number corresponding to the movie from the options given below or 6 to exit: ")
+        movie_list = ["1.Kantaara","2.KGF","3.Modiji","4.Motte","5.ChakDeIndia"]
+        print("The movie available are: ")
+        for i in movie_list:
+            print(i)
+        try:
+            ch = int(input("Enter your choice (1/2/3/4/5/6) here: "))
+            option = movie_list[ch-1]
+            if ch == 1:
+                reserve(option)
+            elif ch == 2:
+                reserve(option)
+            elif ch==3:
+                reserve(option)
+            elif ch==4:
+                reserve(option)
+            elif ch==5:
+                reserve(option)
+            elif ch==6:
+                print("Logged out successfully")
+                exit()
+            else:
+                print("Please enter a valid number from the given options only")
+        except ValueError:
+                print("Invalid Input! Please Enter a Number.")
+
+def view_bookings():
+    return None
 
 def reserve(movie_name): #MongoDB new database consisting of movie names is to be made and user details after booking like ticket number and should be updated in the collection.
     total_seats = 64
     seats_available = [i for i in range(1,total_seats+1)] #Sathya this is your part GUI and all
     reserved_seats = []
-
-def movie_numbers():
-    movie_list = ["1.Kantaara","2.KGF","3.Modiji","4.Motte","5.ChakDeIndia"]
-    print("The movie available are: ")
-    for i in movie_list:
-        print(i)
-
 
 def display_movies():
     movie_list = ["Kantaara","KGF","Modiji","Motte","ChakDeIndia"]
