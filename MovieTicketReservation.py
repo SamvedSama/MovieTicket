@@ -7,7 +7,7 @@ myclient = pymongo.MongoClient("mongodb://localhost:27017/")
 mydb = myclient["User_Details"]
 collection = mydb["user"]
 dict = {}
-mydb2 = myclient["Movie_details"]
+mydb2 = myclient["Movie_Details"]
 movies = mydb2["Movies"]
 dict1 = {}
 def welcome():
@@ -71,16 +71,19 @@ def book():
             print((i+1),".",movie_list[i])
         try:
                 ch = int(input("Enter your choice (1/2/3/4/5/6) here: "))
+                if ch!=6 :
+                    option = movie_list[ch-1]
+                    print(option)
                 if ch == 1:
-                    reserve(movie_list[ch-1])
+                    reserve(option)
                 elif ch == 2:
-                    reserve(movie_list[ch-1])
+                    reserve(option)
                 elif ch==3:
-                    reserve(movie_list[ch-1])
+                    reserve(option)
                 elif ch==4:
-                    reserve(movie_list[ch-1])
+                    reserve(option)
                 elif ch==5:
-                    reserve(movie_list[ch-1])
+                    reserve(option)
                 elif ch==6:
                     print("Logged out successfully")
                     exit()
@@ -95,7 +98,7 @@ def reserve(movie_name): #MongoDB new database consisting of movie names is to b
     for y in x :
         for z in y :
             seats_available = y[z]
-    print(f"Seats Available for {movie_name} is: ",seats_available)
+    print("Seats Available  = ",seats_available)
 def login_user():
     echeck = input("Enter Email you signed Up with: ")
     user = input("Please enter your name: ")
