@@ -34,6 +34,23 @@ def encrypt(original_text):
         enc += key[index]
     return enc
 
+def login_user():
+    echeck = input("Enter Email you signed Up with: ")
+    user = input("Please enter your name: ")
+    password = (getpass.getpass("Please enter your password here: "))  
+    pwd = encrypt(password)
+    query = {'email':echeck,f'{user}':pwd}
+    const={'_id':0}
+    x = mydb.collection.find(query,const)
+    for y in x:
+        for z in y:
+            dict[z]=y[z]
+    if user in dict and dict[user]==encrypt(password):
+        print(f"Login as {user} Successfull")
+        after_login()
+    else :
+        print("Entered Credentials do not match") 
+
 def after_login():
     while True:
         print("Select your choice from the given below: ")
@@ -53,12 +70,6 @@ def after_login():
                 print("Please enter a valid number from the given options only")
         except ValueError:
             print("Invalid Input! Please Enter a Number.")
-
-def movie_numbers():
-    movie_list = ["1.Kantaara","2.KGF","3.Modiji","4.Motte","5.ChakDeIndia"]
-    print("The movie available are: ")
-    for i in movie_list:
-        print(i)
 
 def book():
     print("Please select number corresponding to the movie from the options given below or 6 to exit: ")
@@ -87,25 +98,12 @@ def reserve(movie_name): #MongoDB new database consisting of movie names is to b
     seats_available = [i for i in range(1,total_seats+1)] #Sathya this is your part GUI and all
     reserved_seats = []
 
+def movie_numbers():
+    movie_list = ["1.Kantaara","2.KGF","3.Modiji","4.Motte","5.ChakDeIndia"]
+    print("The movie available are: ")
+    for i in movie_list:
+        print(i)
 
-
-
-def login_user():
-    echeck = input("Enter Email you signed Up with: ")
-    user = input("Please enter your name: ")
-    password = (getpass.getpass("Please enter your password here: "))  
-    pwd = encrypt(password)
-    query = {'email':echeck,f'{user}':pwd}
-    const={'_id':0}
-    x = mydb.collection.find(query,const)
-    for y in x:
-        for z in y:
-            dict[z]=y[z]
-    if user in dict and dict[user]==encrypt(password):
-        print(f"Login as {user} Successfull")
-        after_login()
-    else :
-        print("Entered Credentials do not match") 
 
 def display_movies():
     movie_list = ["Kantaara","KGF","Modiji","Motte","ChakDeIndia"]
@@ -113,7 +111,6 @@ def display_movies():
     for i in movie_list:
         print(i,end=" ")
     print()
-
 
 def main_menu():
     while True:
