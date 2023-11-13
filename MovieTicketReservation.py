@@ -2,7 +2,6 @@ import tkinter
 import pymongo 
 import getpass
 import string
-import random
 
 myclient = pymongo.MongoClient("mongodb://localhost:27017/")
 mydb = myclient["User_Details"]
