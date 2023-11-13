@@ -10,8 +10,17 @@ dict = {}
 mydb2 = myclient["Movie_Details"]
 movies = mydb2["Movies"]
 dict1 = {}
+uname = ''
+pass5 = ''
+eLog = ''
+M_name=''
 def welcome():
     print("Welcome to Movie Ticket Reservation System")
+
+
+
+
+
 
 def create_user():
     user = input("Please enter your name: ")
@@ -21,9 +30,13 @@ def create_user():
     if password == password2 :
         c2 = encrypt(password)
         mydb.collection.insert_one({user:c2,'email':email})
-        print("User Created")
+        print("User Created Successfully")
     else :
         print("Passwords do not match, please try again.")
+
+
+
+
 
 def encrypt(original_text):
     T1 = original_text
@@ -35,6 +48,9 @@ def encrypt(original_text):
         index = chars.index(letter)
         enc += key[index]
     return enc
+
+
+
 
 def after_login():
     # while True:
@@ -56,15 +72,13 @@ def after_login():
         except ValueError:
             print("Invalid Input! Please Enter a Number.")
 
-def movie_numbers():
-    movie_list = ["1.Kantaara","2.KGF","3.Modiji","4.Motte","5.ChakDeIndia"]
-    print("The movie available are: ")
-    for i in movie_list:
-        print(i)
+
+
+
 
 def book():
     while True :
-        print("Please select number corresponding to the movie from the options given below or 6 to exit: ")
+        print("Please select number corresponding to the movie from the options given below to book a seat or 6 to exit: ")
         movie_list = ["Kanthaara","KGF","Modiji","Motte","ChakDeIndia"]
         print("The movies available are: ")
         for i in range(len(movie_list)):
@@ -73,17 +87,22 @@ def book():
                 ch = int(input("Enter your choice (1/2/3/4/5/6) here: "))
                 if ch!=6 :
                     option = movie_list[ch-1]
-                    print(option)
+                    M_name = option
                 if ch == 1:
                     reserve(option)
+                    break
                 elif ch == 2:
                     reserve(option)
+                    break
                 elif ch==3:
                     reserve(option)
+                    break
                 elif ch==4:
                     reserve(option)
+                    break
                 elif ch==5:
                     reserve(option)
+                    break
                 elif ch==6:
                     print("Logged out successfully")
                     exit()
@@ -91,6 +110,10 @@ def book():
                     print("Please enter a valid number from the given options only")
         except ValueError:
                 print("Invalid Input! Please Enter a Number.")
+
+
+
+
 def reserve(movie_name): #MongoDB new database consisting of movie names is to be made and user details after booking like ticket number and should be updated in the collection.
     total_seats = 64
     seats_available = 0
@@ -99,6 +122,49 @@ def reserve(movie_name): #MongoDB new database consisting of movie names is to b
         for z in y :
             seats_available = y[z]
     print("Seats Available  = ",seats_available)
+    seat_book()
+
+
+
+
+
+def seat_book():
+    total_seats = 64
+    seat_layout = []
+    k=1
+    for i in range(1,9):
+        row = []
+        for j in range(1,9):
+            row.append(k)
+            k+=1
+        seat_layout.append(row)
+    for ele in seat_layout:
+        print(ele)
+    while True:
+        num_of_seats = int(input("How many seats would you like to reserve? "))
+        if num_of_seats>total_seats:
+                print("Please enter seats within available limit.")
+        else:
+            break
+    print("Enter Seat Numbers You Want To Reserve: ")
+    num_seats=[]
+    for i in range(num_of_seats):
+        x  = int(input())
+        while x<1 or x >64:
+            print("Wrong Seat Number Enter 1-64 ONLY: ")    
+            x = int(input())
+        else :
+            num_seats.append(x)     
+  
+    print("Seats reserved : ",num_seats)
+    
+    mydb.collection.update_many({},{"$set" : {'Reserved' : num_seats}})
+    #START HERE DB2 UPDATE NOT WORKING
+    mydb2.movies.update_one({"_id": "ObjectId('6551eb31de2dcf70e6d15a57')"},{"$inc" : {'seats_available':2}})      
+
+
+
+
 def login_user():
     echeck = input("Enter Email you signed Up with: ")
     user = input("Please enter your name: ")
@@ -111,21 +177,33 @@ def login_user():
         for z in y:
             dict[z]=y[z]
     if user in dict and dict[user]==encrypt(password):
-        print(f"Login as {user} Successfull")
+        uname = user
+        pass5 = password
+        eLog = echeck
+        print(f"Login as {user} Successful")
         after_login()
     else :
         print("Entered Credentials do not match") 
 
+
+
+
+
+
+
 def display_movies():
     movie_list = ["Kantaara","KGF","Modiji","Motte","ChakDeIndia"]
-    print("The movie available are: ")
-    for i in movie_list:
-        print(i,end=" ")
-    print()
+    print("The movies available are: ")
+    for i in range(len(movie_list)):
+            print((i+1),".",movie_list[i])
+
+
+
 
 
 def main_menu():
     while True:
+        
         welcome()
         print("Choose your option from the below: ")
         print("1. Create a new user ")
