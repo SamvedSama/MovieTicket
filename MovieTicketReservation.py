@@ -7,7 +7,7 @@ myclient = pymongo.MongoClient("mongodb://localhost:27017/")
 mydb = myclient["User_Details"]
 collection = mydb["user"]
 dict = {}
-mydb2 = myclient["Movie_Details"]
+mydb2 = myclient["Movie_details"]
 movies = mydb2["Movies"]
 dict1 = {}
 uname = ''
@@ -165,6 +165,9 @@ def seat_book():
 
 
 
+=======
+    print(f"Seats Available for {movie_name} is: ",seats_available)
+>>>>>>> c54accafe2e129ec5e546c4b3953e3f8eb579d0b
 def login_user():
     echeck = input("Enter Email you signed Up with: ")
     user = input("Please enter your name: ")
