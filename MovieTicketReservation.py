@@ -71,8 +71,9 @@ def book():
             print((i+1),".",movie_list[i])
         try:
                 ch = int(input("Enter your choice (1/2/3/4/5/6) here: "))
-                option = movie_list[ch-1]
-                print(option)
+                if ch!=6 :
+                    option = movie_list[ch-1]
+                    print(option)
                 if ch == 1:
                     reserve(option)
                 elif ch == 2:
