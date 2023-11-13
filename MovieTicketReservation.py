@@ -5,7 +5,7 @@ myclient = pymongo.MongoClient("mongodb://localhost:27017/")
 mydb = myclient["User_Details"]
 collection = mydb["user"]
 x = mydb.collection.find({},{'_id':0})
-
+dict = {}
 def welcome():
     print("Welcome to Movie Ticket Reservation System")
 
@@ -20,6 +20,7 @@ def login_user():
     password = input("Please enter your password here: ")
     for y in x:
         for z in y:
+            
             if user==z and password==y[z]:
                 print(f"Logged in as {user} successfully! ")
             elif(user != z and password != y[z]):
