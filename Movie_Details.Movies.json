@@ -1,0 +1,14 @@
+[{
+  "_id": {
+    "$oid": "6551eb31de2dcf70e6d15a57"
+  },
+  "Name": "Kanthaara",
+  "seats_available": 64
+},
+{
+  "_id": {
+    "$oid": "6551eba2de2dcf70e6d15a58"
+  },
+  "Name": "KGF",
+  "seats_available": 64
+}]
