@@ -40,7 +40,7 @@ def encrypt(original_text):
     return enc
 
 def after_login():
-    # while True:
+    while True:
         print("Select your choice from the given below: ")
         print("1.Book a Ticket" )
         print("2.View Booked tickets" )
@@ -63,27 +63,26 @@ def after_login():
             print("Invalid Input! Please Enter a Number.")
 
 def book():
-    while True :
-        print("Please select number corresponding to the movie from the options given below to book a seat or 6 to exit: ")
-        movie_list = ["Kanthaara","KGF","Modiji","Motte","ChakDeIndia"]
-        print("The movies available are: ")
-        for i in range(len(movie_list)):
-            print((i+1),".",movie_list[i])
-        try:
-                ch = int(input("Enter your choice (1/2/3/4/5/6) here: "))
-                if ch!=6 :
-                    option = movie_list[ch-1]
-                    #print(movies.find_one({'Name': option}))
-                    M_name = option
-                if 5>=ch>=1:
-                    reserve(option)
-                elif ch==6:
-                    print("Logged out successfully")
-                    exit()
-                else:
-                    print("Please enter a valid number from the given options only")
-        except ValueError:
-                print("Invalid Input! Please Enter a Number.")
+    print("Please select number corresponding to the movie from the options given below to book a seat or 6 to exit: ")
+    movie_list = ["Kanthaara","KGF","Modiji","Motte","ChakDeIndia"]
+    print("The movies available are: ")
+    for i in range(len(movie_list)):
+        print((i+1),".",movie_list[i])
+    try:
+            ch = int(input("Enter your choice (1/2/3/4/5/6) here: "))
+            if ch!=6 :
+                option = movie_list[ch-1]
+                #print(movies.find_one({'Name': option}))
+                M_name = option
+            if 5>=ch>=1:
+                reserve(option)
+            elif ch==6:
+                print("Logged out successfully")
+                exit()
+            else:
+                print("Please enter a valid number from the given options only")
+    except ValueError:
+            print("Invalid Input! Please Enter a Number.")
 
 def reserve(movie_name): #MongoDB new database consisting of movie names is to be made and user details after booking like ticket number and should be updated in the collection.
     global M_name,uname
@@ -92,6 +91,7 @@ def reserve(movie_name): #MongoDB new database consisting of movie names is to b
     seats_available = 0
     x  = movies.find_one({"Name":f'{movie_name}'},{"_id":0,"Name":0})
     # print(x)
+    os.system("cls")
     print("Seats Available  = ",x['seats_available'])
     collection.update_one({"name":uname},{'$set':{"movie_reserved":M_name}})
     seat_book()
@@ -133,6 +133,7 @@ def seat_book():
         else :
             num_seats.append(x)     
     print("Seats for reserving: ",num_seats)
+    #transaction(num_of_seats)
     print("Reserving Seats")
     collection.update_one({'name':uname},{"$set" : {'Reserved' : num_seats}})
     print("Seats Reserved")
@@ -142,23 +143,33 @@ def seat_book():
     movies.update_one({'Name':M_name},{'$push':{'reserved_seats': num_seats}})
 
 def view_bookings():
-    return None
-
+    global uname
+    try :
+        x = movies.find_one({'Name':M_name})
+        y = collection.find_one({'name':uname})
+        print(f"{y['name']} has reserved the following seats: \n",y['Reserved'],f"for the movie {y['movie_reserved']}")
+    except KeyError :
+         print(f"No Seats Booked By {uname}")
+def transaction():
+     return None
 def login_user():
     #echeck = input("Enter Email you signed Up with: ")
     user = input("Please enter your name: ")
-    password = encrypt((input("Please enter your password here: ")))  
+    user = user.lstrip().rstrip()
+    password = encrypt((getpass.getpass("Please enter your password here: ")).lstrip().rstrip()) 
     pwd = (password)
     query = {'name':user}
     x = mydb.collection.find_one(query,{"_id":0})
-    if x['password']==pwd:
-         global uname,pass5
-         uname = user
-         pass5 = pwd
-         os.system("cls")
-         print("Login Succesful ")
-         after_login()
-
+    try :
+        if x['password']==pwd:
+            global uname,pass5
+            uname = user
+            pass5 = pwd
+            os.system("cls")
+            print("Login Succesful ")
+            after_login()
+    except TypeError:
+        print("User doesnt exist or Credentials do not match ")
 def display_movies():
     movie_list = ["Kantaara","KGF","Modiji","Motte","ChakDeIndia"]
     print("The movies available are: ")
