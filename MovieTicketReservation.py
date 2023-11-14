@@ -7,19 +7,15 @@ import os
 myclient = pymongo.MongoClient("mongodb://localhost:27017/")
 mydb = myclient["User_Details"]
 collection = mydb["collection"]
-dict = {}
 movies = mydb["Movies"]
+dict = {}
 dict1 = {}
 uname = ''
 pass5 = ''
 M_name=''
+
 def welcome():
     print("Welcome to Movie Ticket Reservation System")
-
-
-
-
-
 
 def create_user():
     user = input("Please enter your name: ")
@@ -32,10 +28,6 @@ def create_user():
     else :
         print("Passwords do not match, please try again.")
 
-
-
-
-
 def encrypt(original_text):
     T1 = original_text
     chars=' '+ string.ascii_letters+string.digits+string.punctuation
@@ -47,9 +39,6 @@ def encrypt(original_text):
         enc += key[index]
     return enc
 
-
-
-
 def after_login():
     # while True:
         print("Select your choice from the given below: ")
@@ -57,21 +46,22 @@ def after_login():
         print("2.View Booked tickets" )
         print("3.Logout" )
         try:
-            ch = int(input("Enter your choice (1/2/3/4) here: "))
+            ch = int(input("Enter your choice (1/2/3) here: "))
             if ch == 1:
                 book()
-            #elif ch==2:
-                #view_bookings()
-            #elif ch==3:
-            # global uname,pass5
-            # uname = ''
-            # pass5 = ''
-             #   print("Successfully logged out.")
-              #  exit()
+            elif ch==2:
+                view_bookings()
+            elif ch==3:
+                global uname,pass5
+                uname = ''
+                pass5 = ''
+                print("Successfully logged out.")
+                exit()
             else:
                 print("Please enter a valid number from the given options only")
         except ValueError:
             print("Invalid Input! Please Enter a Number.")
+
 def book():
     while True :
         print("Please select number corresponding to the movie from the options given below to book a seat or 6 to exit: ")
@@ -84,7 +74,6 @@ def book():
                 if ch!=6 :
                     option = movie_list[ch-1]
                     #print(movies.find_one({'Name': option}))
-
                     M_name = option
                 if 5>=ch>=1:
                     reserve(option)
@@ -96,25 +85,16 @@ def book():
         except ValueError:
                 print("Invalid Input! Please Enter a Number.")
 
-
-
-
 def reserve(movie_name): #MongoDB new database consisting of movie names is to be made and user details after booking like ticket number and should be updated in the collection.
-    
     global M_name,uname
     M_name = movie_name
     print(M_name)
     seats_available = 0
     x  = movies.find_one({"Name":f'{movie_name}'},{"_id":0,"Name":0})
     # print(x)
-
     print("Seats Available  = ",x['seats_available'])
     collection.update_one({"name":uname},{'$set':{"movie_reserved":M_name}})
     seat_book()
-
-
-
-
 
 def seat_book():
     global uname,pass5
@@ -123,11 +103,17 @@ def seat_book():
     total_seats = 64
     seat_layout = []
     k=1
+    x = movies.find_one({'Name':M_name})
     for i in range(1,9):
         row = []
         for j in range(1,9):
-            row.append(k)
-            k+=1
+                for z in x['reserved_seats']:
+                    if k in z :
+                        row.append("Booked Seat")
+                        k+=1
+                    else:
+                        row.append(k)
+                        k+=1
         seat_layout.append(row)
     for ele in seat_layout:
         print(ele)
@@ -141,20 +127,22 @@ def seat_book():
     num_seats=[]
     for i in range(num_of_seats):
         x  = int(input())
-        while x<1 or x >64:
+        while x<1 or x>64:
             print("Wrong Seat Number Enter 1-64 ONLY: ")    
             x = int(input())
         else :
             num_seats.append(x)     
-  
     print("Seats for reserving: ",num_seats)
     print("Reserving Seats")
-    
     collection.update_one({'name':uname},{"$set" : {'Reserved' : num_seats}})
     print("Seats Reserved")
     y = movies.find_one({'Name':M_name})
     #print(y)
-    movies.update_one({'Name':M_name},{'$inc':{'seats_available' : -(num_of_seats)} })
+    movies.update_one({'Name':M_name},{'$inc':{'seats_available' : -(num_of_seats)}})
+    movies.update_one({'Name':M_name},{'$push':{'reserved_seats': num_seats}})
+
+def view_bookings():
+    return None
 
 def login_user():
     #echeck = input("Enter Email you signed Up with: ")
@@ -162,24 +150,14 @@ def login_user():
     password = encrypt((input("Please enter your password here: ")))  
     pwd = (password)
     query = {'name':user}
-   
     x = mydb.collection.find_one(query,{"_id":0})
-   
     if x['password']==pwd:
          global uname,pass5
          uname = user
          pass5 = pwd
          os.system("cls")
          print("Login Succesful ")
-         
          after_login()
-
-
-
-
-
-
-
 
 def display_movies():
     movie_list = ["Kantaara","KGF","Modiji","Motte","ChakDeIndia"]
@@ -187,10 +165,8 @@ def display_movies():
     for i in range(len(movie_list)):
             print((i+1),".",movie_list[i])
 
-
 def main_menu():
-    while True:
-        
+    while True:  
         welcome()
         print("Choose your option from the below: ")
         print("1. Create a new user ")
