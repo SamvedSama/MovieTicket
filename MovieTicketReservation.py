@@ -46,17 +46,17 @@ def after_login():
         print("2.View Booked tickets" )
         print("3.Logout" )
         try:
-            ch = int(input("Enter your choice (1/2/3/4) here: "))
+            ch = int(input("Enter your choice (1/2/3) here: "))
             if ch == 1:
                 book()
-            #elif ch==2:
-                #view_bookings()
-            #elif ch==3:
-            # global uname,pass5
-            # uname = ''
-            # pass5 = ''
-             #   print("Successfully logged out.")
-              #  exit()
+            elif ch==2:
+                view_bookings()
+            elif ch==3:
+                global uname,pass5
+                uname = ''
+                pass5 = ''
+                print("Successfully logged out.")
+                exit()
             else:
                 print("Please enter a valid number from the given options only")
         except ValueError:
@@ -103,11 +103,17 @@ def seat_book():
     total_seats = 64
     seat_layout = []
     k=1
+    x = movies.find_one({'Name':M_name})
     for i in range(1,9):
         row = []
         for j in range(1,9):
-            row.append(k)
-            k+=1
+                for z in x['reserved_seats']:
+                    if k in z :
+                        row.append("Booked Seat")
+                        k+=1
+                    else:
+                        row.append(k)
+                        k+=1
         seat_layout.append(row)
     for ele in seat_layout:
         print(ele)
@@ -121,7 +127,7 @@ def seat_book():
     num_seats=[]
     for i in range(num_of_seats):
         x  = int(input())
-        while x<1 or x >64:
+        while x<1 or x>64:
             print("Wrong Seat Number Enter 1-64 ONLY: ")    
             x = int(input())
         else :
@@ -132,7 +138,11 @@ def seat_book():
     print("Seats Reserved")
     y = movies.find_one({'Name':M_name})
     #print(y)
-    movies.update_one({'Name':M_name},{'$inc':{'seats_available' : -(num_of_seats)} })
+    movies.update_one({'Name':M_name},{'$inc':{'seats_available' : -(num_of_seats)}})
+    movies.update_one({'Name':M_name},{'$push':{'reserved_seats': num_seats}})
+
+def view_bookings():
+    return None
 
 def login_user():
     #echeck = input("Enter Email you signed Up with: ")
