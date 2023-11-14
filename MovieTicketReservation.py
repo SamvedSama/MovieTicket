@@ -2,17 +2,16 @@ import tkinter
 import pymongo 
 import getpass
 import string
+import os
 
 myclient = pymongo.MongoClient("mongodb://localhost:27017/")
 mydb = myclient["User_Details"]
-collection = mydb["user"]
+collection = mydb["collection"]
 dict = {}
-mydb2 = myclient["Movie_Details"]
-movies = mydb2["Movies"]
+movies = mydb["Movies"]
 dict1 = {}
 uname = ''
 pass5 = ''
-eLog = ''
 M_name=''
 def welcome():
     print("Welcome to Movie Ticket Reservation System")
@@ -26,10 +25,9 @@ def create_user():
     user = input("Please enter your name: ")
     password = input("Please enter your password here: ")
     password2 = input("Please enter your password again here: ")
-    email = input("Please enter your Email address: ")
     if password == password2 :
         c2 = encrypt(password)
-        mydb.collection.insert_one({user:c2,'email':email})
+        mydb.collection.insert_one({'name':user,'password':c2})
         print("User Created Successfully")
     else :
         print("Passwords do not match, please try again.")
@@ -65,6 +63,9 @@ def after_login():
             #elif ch==2:
                 #view_bookings()
             #elif ch==3:
+            # global uname,pass5
+            # uname = ''
+            # pass5 = ''
              #   print("Successfully logged out.")
               #  exit()
             else:
@@ -82,22 +83,11 @@ def book():
                 ch = int(input("Enter your choice (1/2/3/4/5/6) here: "))
                 if ch!=6 :
                     option = movie_list[ch-1]
+                    #print(movies.find_one({'Name': option}))
+
                     M_name = option
-                if ch == 1:
+                if 5>=ch>=1:
                     reserve(option)
-                    break
-                elif ch == 2:
-                    reserve(option)
-                    break
-                elif ch==3:
-                    reserve(option)
-                    break
-                elif ch==4:
-                    reserve(option)
-                    break
-                elif ch==5:
-                    reserve(option)
-                    break
                 elif ch==6:
                     print("Logged out successfully")
                     exit()
@@ -110,13 +100,16 @@ def book():
 
 
 def reserve(movie_name): #MongoDB new database consisting of movie names is to be made and user details after booking like ticket number and should be updated in the collection.
-    total_seats = 64
+    
+    global M_name,uname
+    M_name = movie_name
+    print(M_name)
     seats_available = 0
-    x  = movies.find({"Name":f'{movie_name}'},{"_id":0,"Name":0})
-    for y in x :
-        for z in y :
-            seats_available = y[z]
-    print("Seats Available  = ",seats_available)
+    x  = movies.find_one({"Name":f'{movie_name}'},{"_id":0,"Name":0})
+    # print(x)
+
+    print("Seats Available  = ",x['seats_available'])
+    collection.update_one({"name":uname},{'$set':{"movie_reserved":M_name}})
     seat_book()
 
 
@@ -124,6 +117,9 @@ def reserve(movie_name): #MongoDB new database consisting of movie names is to b
 
 
 def seat_book():
+    global uname,pass5
+    # q1 = mydb.collection.find_one({'name':uname})
+    # print(q1)
     total_seats = 64
     seat_layout = []
     k=1
@@ -153,29 +149,31 @@ def seat_book():
   
     print("Seats for reserving: ",num_seats)
     print("Reserving Seats")
-    mydb.collection.update_one({uname:pass5},{"$set" : {'Reserved' : num_seats}})
+    
+    collection.update_one({'name':uname},{"$set" : {'Reserved' : num_seats}})
     print("Seats Reserved")
-    #START HERE DB2 UPDATE NOT WORKING
+    y = movies.find_one({'Name':M_name})
+    #print(y)
+    movies.update_one({'Name':M_name},{'$inc':{'seats_available' : -(num_of_seats)} })
 
 def login_user():
-    echeck = input("Enter Email you signed Up with: ")
+    #echeck = input("Enter Email you signed Up with: ")
     user = input("Please enter your name: ")
-    password = (getpass.getpass("Please enter your password here: "))  
-    pwd = encrypt(password)
-    query = {'email':echeck,f'{user}':pwd}
-    const={'_id':0}
-    x = mydb.collection.find(query,const)
-    for y in x:
-        for z in y:
-            dict[z]=y[z]
-    if user in dict and dict[user]==encrypt(password):
-        uname = user
-        pass5 = password
-        eLog = echeck
-        print(f"Login as {user} Successful")
-        after_login()
-    else :
-        print("Entered Credentials do not match") 
+    password = encrypt((input("Please enter your password here: ")))  
+    pwd = (password)
+    query = {'name':user}
+   
+    x = mydb.collection.find_one(query,{"_id":0})
+   
+    if x['password']==pwd:
+         global uname,pass5
+         uname = user
+         pass5 = pwd
+         os.system("cls")
+         print("Login Succesful ")
+         
+         after_login()
+
 
 
 
