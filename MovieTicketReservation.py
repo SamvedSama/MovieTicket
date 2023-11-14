@@ -13,13 +13,9 @@ dict1 = {}
 uname = ''
 pass5 = ''
 M_name=''
+
 def welcome():
     print("Welcome to Movie Ticket Reservation System")
-
-
-
-
-
 
 def create_user():
     user = input("Please enter your name: ")
@@ -32,10 +28,6 @@ def create_user():
     else :
         print("Passwords do not match, please try again.")
 
-
-
-
-
 def encrypt(original_text):
     T1 = original_text
     chars=' '+ string.ascii_letters+string.digits+string.punctuation
@@ -46,9 +38,6 @@ def encrypt(original_text):
         index = chars.index(letter)
         enc += key[index]
     return enc
-
-
-
 
 def after_login():
     # while True:
@@ -73,10 +62,6 @@ def after_login():
         except ValueError:
             print("Invalid Input! Please Enter a Number.")
 
-
-
-
-
 def book():
     while True :
         print("Please select number corresponding to the movie from the options given below to book a seat or 6 to exit: ")
@@ -89,7 +74,6 @@ def book():
                 if ch!=6 :
                     option = movie_list[ch-1]
                     #print(movies.find_one({'Name': option}))
-
                     M_name = option
                 if 5>=ch>=1:
                     reserve(option)
@@ -101,25 +85,16 @@ def book():
         except ValueError:
                 print("Invalid Input! Please Enter a Number.")
 
-
-
-
 def reserve(movie_name): #MongoDB new database consisting of movie names is to be made and user details after booking like ticket number and should be updated in the collection.
-    
     global M_name,uname
     M_name = movie_name
     print(M_name)
     seats_available = 0
     x  = movies.find_one({"Name":f'{movie_name}'},{"_id":0,"Name":0})
     # print(x)
-
     print("Seats Available  = ",x['seats_available'])
     collection.update_one({"name":uname},{'$set':{"movie_reserved":M_name}})
     seat_book()
-
-
-
-
 
 def seat_book():
     global uname,pass5
@@ -151,10 +126,8 @@ def seat_book():
             x = int(input())
         else :
             num_seats.append(x)     
-  
     print("Seats for reserving: ",num_seats)
     print("Reserving Seats")
-    
     collection.update_one({'name':uname},{"$set" : {'Reserved' : num_seats}})
     print("Seats Reserved")
     y = movies.find_one({'Name':M_name})
@@ -167,24 +140,14 @@ def login_user():
     password = encrypt((input("Please enter your password here: ")))  
     pwd = (password)
     query = {'name':user}
-   
     x = mydb.collection.find_one(query,{"_id":0})
-   
     if x['password']==pwd:
          global uname,pass5
          uname = user
          pass5 = pwd
          os.system("cls")
          print("Login Succesful ")
-         
          after_login()
-
-
-
-
-
-
-
 
 def display_movies():
     movie_list = ["Kantaara","KGF","Modiji","Motte","ChakDeIndia"]
@@ -192,13 +155,8 @@ def display_movies():
     for i in range(len(movie_list)):
             print((i+1),".",movie_list[i])
 
-
-
-
-
 def main_menu():
-    while True:
-        
+    while True:  
         welcome()
         print("Choose your option from the below: ")
         print("1. Create a new user ")
