@@ -24,6 +24,7 @@ def create_user():
     if password == password2 :
         c2 = encrypt(password)
         mydb.collection.insert_one({'name':user,'password':c2})
+        collection.update_one({"name":uname},{'$set':{"movie_reserved": '' }})
         print("User Created Successfully")
     else :
         print("Passwords do not match, please try again.")
@@ -147,7 +148,7 @@ def view_bookings():
     try :
         x = movies.find_one({'Name':M_name})
         y = collection.find_one({'name':uname})
-        print(f"{y['name']} has reserved the following seats: \n",y['Reserved'],f"for the movie {y['movie_reserved']}")
+        print(y)
     except KeyError :
          print(f"No Seats Booked By {uname}")
 def transaction():
