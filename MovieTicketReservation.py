@@ -7,7 +7,7 @@ myclient = pymongo.MongoClient("mongodb://localhost:27017/")
 mydb = myclient["User_Details"]
 collection = mydb["user"]
 dict = {}
-mydb2 = myclient["Movie_details"]
+mydb2 = myclient["Movie_Details"]
 movies = mydb2["Movies"]
 dict1 = {}
 uname = ''
@@ -71,11 +71,6 @@ def after_login():
                 print("Please enter a valid number from the given options only")
         except ValueError:
             print("Invalid Input! Please Enter a Number.")
-
-
-
-
-
 def book():
     while True :
         print("Please select number corresponding to the movie from the options given below to book a seat or 6 to exit: ")
@@ -161,8 +156,6 @@ def seat_book():
     mydb.collection.update_one({uname:pass5},{"$set" : {'Reserved' : num_seats}})
     print("Seats Reserved")
     #START HERE DB2 UPDATE NOT WORKING
-         
-
 
 def login_user():
     echeck = input("Enter Email you signed Up with: ")
@@ -195,9 +188,6 @@ def display_movies():
     print("The movies available are: ")
     for i in range(len(movie_list)):
             print((i+1),".",movie_list[i])
-
-
-
 
 
 def main_menu():
