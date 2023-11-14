@@ -156,13 +156,11 @@ def seat_book():
         else :
             num_seats.append(x)     
   
-    print("Seats reserved : ",num_seats)
-    
-    mydb.collection.update_many({},{"$set" : {'Reserved' : num_seats}})
+    print("Seats for reserving: ",num_seats)
+    print("Reserving Seats")
+    mydb.collection.update_one({uname:pass5},{"$set" : {'Reserved' : num_seats}})
+    print("Seats Reserved")
     #START HERE DB2 UPDATE NOT WORKING
-    mydb2.movies.update_one({"_id": "ObjectId('6551eb31de2dcf70e6d15a57')"},{"$inc" : {'seats_available':2}})      
-
-
 
 def login_user():
     echeck = input("Enter Email you signed Up with: ")
