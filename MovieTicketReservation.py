@@ -22,7 +22,7 @@ def create_user():
     if password == password2 :
         c2 = encrypt(password)
         mydb.collection.insert_one({'name':user,'password':c2})
-        collection.update_one({"name":uname},{'$set':{"movie_reserved": '' }})
+        collection.update_one({"name":user},{'$set':{"movie_reserved": '' }})
         print("User Created Successfully")
     else :
         print("Passwords do not match, please try again.")
