@@ -100,7 +100,7 @@ def seat_book():
     total_seats = 64
     seat_layout = []
     k=1
-    x = movies.find_one({'Name':M_name})
+    x = movies.find_one({'Name':M_name})        #Reserved seats bugged remove afterwards
     for i in range(1,9):
         row = []
         for j in range(1,9):
