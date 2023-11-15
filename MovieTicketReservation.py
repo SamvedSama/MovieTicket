@@ -142,7 +142,7 @@ def seat_book():
 def view_bookings():
     global uname
     try :
-        x = movies.find_one({'Name':M_name})
+        x = movies.find_one({'Name':M_name})        #Run this once to check if it works as required
         y = collection.find_one({'name':uname})
         print(y)
     except KeyError :
