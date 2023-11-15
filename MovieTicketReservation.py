@@ -71,8 +71,6 @@ def book():
             ch = int(input("Enter your choice (1/2/3/4/5/6) here: "))
             if ch!=6 :
                 option = movie_list[ch-1]
-                #print(movies.find_one({'Name': option}))
-                M_name = option
             if 5>=ch>=1:
                 reserve(option)
             elif ch==6:
