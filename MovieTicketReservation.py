@@ -153,7 +153,7 @@ def login_user():
     #echeck = input("Enter Email you signed Up with: ")
     user = input("Please enter your name: ")
     user = user.lstrip().rstrip()
-    password = encrypt((getpass.getpass("Please enter your password here: ")).lstrip().rstrip()) 
+    password = encrypt((getpass.getpass("Please enter your password here: ")).lstrip().rstrip()) #Sathya make that star for hiding password
     pwd = (password)
     query = {'name':user}
     x = mydb.collection.find_one(query,{"_id":0})
