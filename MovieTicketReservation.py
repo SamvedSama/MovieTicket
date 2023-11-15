@@ -185,7 +185,7 @@ def main_menu():
         print("2. Login ")
         print("3. Display Movies List ")
         print("4. Exit ")
-        try:
+        try: #remove try catch after gui merge
             ch = int(input("Enter your choice (1/2/3/4) here: "))
             if ch == 1:
                 create_user()
