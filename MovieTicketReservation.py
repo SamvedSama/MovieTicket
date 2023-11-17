@@ -153,7 +153,7 @@ def view_bookings():
         print(f"Logged in as {uname}")
         x = movies.find_one({'Name':M_name})        #Run this once to check if it works as required#works
         y = collection.find_one({'name':uname})
-        print(f"movie reserved is {y["movie_reserved"]}")
+        print(f"movie reserved is {y['movie_reserved']}")
     except KeyError :
          print(f"No Seats Booked By {uname}")
 def transaction():
