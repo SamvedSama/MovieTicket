@@ -8,8 +8,6 @@ myclient = pymongo.MongoClient("mongodb://localhost:27017/")
 mydb = myclient["User_Details"]
 collection = mydb["collection"]
 movies = mydb["Movies"]
-dict = {}
-dict1 = {}
 uname = ''
 pass5 = ''
 M_name=''
@@ -24,7 +22,8 @@ def create_user():
     if password == password2 :
         c2 = encrypt(password)
         mydb.collection.insert_one({'name':user,'password':c2})
-        collection.update_one({"name":uname},{'$set':{"movie_reserved": '' }})
+        collection.update_one({"name":user},{'$set':{"movie_reserved": '' }})
+        os.system("cls")
         print("User Created Successfully")
     else :
         print("Passwords do not match, please try again.")
@@ -64,6 +63,9 @@ def after_login():
             print("Invalid Input! Please Enter a Number.")
 
 def book():
+    global uname
+    os.system("cls")
+    print(f"Logged in as {uname}")
     print("Please select number corresponding to the movie from the options given below to book a seat or 6 to exit: ")
     movie_list = ["Kanthaara","KGF","Modiji","Motte","ChakDeIndia"]
     print("The movies available are: ")
@@ -73,8 +75,6 @@ def book():
             ch = int(input("Enter your choice (1/2/3/4/5/6) here: "))
             if ch!=6 :
                 option = movie_list[ch-1]
-                #print(movies.find_one({'Name': option}))
-                M_name = option
             if 5>=ch>=1:
                 reserve(option)
             elif ch==6:
@@ -88,12 +88,11 @@ def book():
 def reserve(movie_name): #MongoDB new database consisting of movie names is to be made and user details after booking like ticket number and should be updated in the collection.
     global M_name,uname
     M_name = movie_name
-    print(M_name)
-    seats_available = 0
+    os.system("cls")
+    print(f"Logged in as {uname}")
+    print(f"Reserving seats for {M_name}")
     x  = movies.find_one({"Name":f'{movie_name}'},{"_id":0,"Name":0})
     # print(x)
-    os.system("cls")
-    print("Seats Available  = ",x['seats_available'])
     collection.update_one({"name":uname},{'$set':{"movie_reserved":M_name}})
     seat_book()
 
@@ -104,7 +103,10 @@ def seat_book():
     total_seats = 64
     seat_layout = []
     k=1
+    os.system("cls")
+    print(f"Logged in as {uname}")
     x = movies.find_one({'Name':M_name})
+    print("Seats Available  = ",x['seats_available'])        #Reserved seats bugged remove afterwards#sathya make seat selection buttons as well please
     for i in range(1,9):
         row = []
         for j in range(1,9):
@@ -145,20 +147,21 @@ def seat_book():
 
 def view_bookings():
     global uname
+    os.system("cls")
+  
     try :
-        x = movies.find_one({'Name':M_name})
+        print(f"Logged in as {uname}")
+        x = movies.find_one({'Name':M_name})        #Run this once to check if it works as required#works
         y = collection.find_one({'name':uname})
-        print(y)
+        print(f"movie reserved is {y["movie_reserved"]}")
     except KeyError :
          print(f"No Seats Booked By {uname}")
 def transaction():
      return None
 def login_user():
     #echeck = input("Enter Email you signed Up with: ")
-    user = input("Please enter your name: ")
-    user = user.lstrip().rstrip()
-    password = encrypt((getpass.getpass("Please enter your password here: ")).lstrip().rstrip()) 
-    pwd = (password)
+    user = input("Please enter your name: ").lstrip().rstrip()
+    pwd = encrypt((getpass.getpass("Please enter your password here: ")).lstrip().rstrip()) #Sathya make that star for hiding password
     query = {'name':user}
     x = mydb.collection.find_one(query,{"_id":0})
     try :
@@ -185,7 +188,7 @@ def main_menu():
         print("2. Login ")
         print("3. Display Movies List ")
         print("4. Exit ")
-        try:
+        try: #remove try catch after gui merge
             ch = int(input("Enter your choice (1/2/3/4) here: "))
             if ch == 1:
                 create_user()
