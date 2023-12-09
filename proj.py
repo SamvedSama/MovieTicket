@@ -1,9 +1,12 @@
 from tkinter import *
-import sys 
+import sys,requi,reserve,login
 from datetime import date,timedelta
 
 class PaymentGateway:
     def process_payment(self, amount):
+        # Mock implementation for testing purposes
+        # In a real scenario, integrate with a payment gateway API
+        # Here, you can assume the payment is successful if the card number starts with '4' (Visa)
         return amount>0
 
 root=Tk()
@@ -62,14 +65,14 @@ def finish_create():
     global c
     global d
     global e
-    a=user.get()
-    b=password.get()
-    c=password2.get()
-    d=mail.get()
-    e=mail2.get()
+    a=user.get()            #Username
+    b=password.get()        #Pass1
+    c=password2.get()       #Pass2
+    d=mail.get()            #Email1
+    e=mail2.get()           #Email2
     if b==c and d.endswith("@gmail.com") and d==e:
         notif1.config(fg="green",text="User created Successfully")
-        Create_screen.after(3000,Create_screen.destroy)
+        Create_screen.after(1000,Create_screen.destroy)
     else:
         notif1.config(fg="red",text="Either password entered or email doesnt match the criteria, please try again.")
         
@@ -161,9 +164,9 @@ def Jailer():
     l.grid(row=2,sticky=N)
 
 def Three_Idiots():
-    global three_idiots_screen
+    global Three_Idiots_screen
     Three_Idiots_screen=Toplevel(root)
-    Three_Idiots_screen.title("Three Idiots")
+    Three_Idiots_screen.title("3 Idiots")
     l=Label(Three_Idiots_screen,text="Select number of tickets:",font=('Çalibri',12))
     l.grid(row=13,sticky=N)
     n=IntVar()
@@ -188,6 +191,8 @@ def Avengers_Endgame():
 
 def Display():
     global Display_screen
+    requi.os.system("cls")
+    global movie_list
     Display_screen=Toplevel(root)
     Display_screen.title("Display movies")
     l=Label(Display_screen,text="The Movies available are:",font=('Çalibri',12))
@@ -204,7 +209,7 @@ def Display():
     l.grid(row=5,sticky=W)
 
 def proceed_to_seat_selection(movie_name,num_tickets):
-    global Proceed_screen
+    global Proceed_screen,m_name
     Proceed_screen=Toplevel(root)
     Proceed_screen.title("Seat Selection")
     Label(Proceed_screen,text="Select your seats:",font=('Calibri', 12)).grid(row=0)
@@ -215,6 +220,29 @@ def proceed_to_seat_selection(movie_name,num_tickets):
     buttons=[]  # List to store references to the seat buttons
     selected_seats=set()  # Set to store selected seat numbers
 
+    def check(y):
+        global m_name,book_date
+        x = requi.movies.find_one({'Name':m_name})
+        seats_available= x["seats_available"]
+        try : 
+            global seats_day
+            seats_day=seats_available[book_date]  
+        except KeyError:
+            seats_available[book_date] = [[0]]
+            seats_day = seats_available[book_date]
+        s=seats_day
+        global booked_seats
+        l1 =[]
+        for i in range(len(s)) :
+            for j in s[i]:
+                l1.append(j)
+        booked_seats=l1
+        if y in l1 :
+            return 'RS'
+        else :
+            return y
+    seats = list(map(check,list(i for i in range(1,65))))
+
     def toggle_seat(seat_number):
         nonlocal selected_seats
         if seat_number in selected_seats:
@@ -224,8 +252,9 @@ def proceed_to_seat_selection(movie_name,num_tickets):
             buttons[seat_number-1].config(state='disabled',bg='gray',command=lambda: None)
             selected_seats.add(seat_number)
 
-    for i in range(64):
-        seat_button=Button(Proceed_screen,text="{}".format(i+1),width=5,
+    
+    for i in range(len(seats)):
+        seat_button=Button(Proceed_screen,text=f"{seats[i]}",width=5,
                              command=lambda num=i+1: toggle_seat(num))
         seat_button.grid(row=row_index,column=col_index)
         buttons.append(seat_button)  # Store the button reference in the list
@@ -260,16 +289,22 @@ def proceed_to_seat_selection(movie_name,num_tickets):
 
 
 def book():
-    global Book_screen
+    global Book_screen,book_date
+    global m_name
+    movie_options = []
     Book_screen = Toplevel(root)
     Book_screen.title("Bookings")
     Label(Book_screen, text=f"Logged in as {a1}", font=('Calibri', 12)).grid(row=0)
     Label(Book_screen, text="Select Movie:", font=('Calibri', 12)).grid(row=1)
     movie_var = StringVar()
-    movie_var.set("Kantara")  # Default movie selection
-    movie_options = ["Kantara", "KGF 2", "Jailer", "Three Idiots", "Avengers: Endgame"]
+    buffer_movie=requi.movies.find({},{"_id":0,"seats_available":0})                    #Accessing db and showing moves in db for dropdown
+    for i in buffer_movie:
+        for key in i:
+            movie_options.append(i[key])
+    movie_var.set(movie_options[0])
     movie_dropdown = OptionMenu(Book_screen, movie_var, *movie_options)
     movie_dropdown.grid(row=1, column=1)
+    m_name = movie_var.get()    #User movie selection
     Label(Book_screen, text="Select number of tickets:", font=('Calibri', 12)).grid(row=2)
     num_tickets_var = IntVar()
     num_tickets_var.set(1)
@@ -283,6 +318,15 @@ def book():
     date_options=[tomorrow+timedelta(days=i) for i in range(7)]
     date_dropdown = OptionMenu(Book_screen, date_var, *date_options)
     date_dropdown.grid(row=3, column=1)
+    book_date = date_var.get()
+    l1 = ""
+    book_date = book_date.split("-")
+    for i in book_date[::-1]:
+        l1 += i + '/'
+    l1 = l1[0:-1]
+    book_date = l1
+
+
 
     # Button to proceed to seat selection
     proceed_button = Button(Book_screen, text="Proceed to seat selection",command=lambda: proceed_to_seat_selection(movie_var.get(), 
