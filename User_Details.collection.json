@@ -1,0 +1,78 @@
+[{
+  "_id": {
+    "$oid": "656c02acd2514237b0fdd7d7"
+  },
+  "name": "Sai",
+  "password": "J#D",
+  "email": "Sai@gmail.com",
+  "movie_reserved": {
+    "03/12/2023": {
+      "KGF": [
+        3,
+        4
+      ]
+    }
+  }
+},
+{
+  "_id": {
+    "$oid": "656c230d00b9df23b11e7b7f"
+  },
+  "name": "Sam",
+  "password": "J#{",
+  "email": "Sam@gmail.com",
+  "movie_reserved": {
+    "03/12/2023": {
+      "KGF": [
+        23,
+        34,
+        5,
+        6
+      ]
+    },
+    "09/12/2023": {
+      "KGF": [
+        1,
+        2
+      ]
+    },
+    "10/12/2023": {
+      "Kingsman": [
+        1,
+        28,
+        64,
+        2,
+        3,
+        9
+      ],
+      "KGF": [
+        1,
+        28,
+        64
+      ]
+    }
+  },
+  "book_count": 4
+},
+{
+  "_id": {
+    "$oid": "656c797d5db48e8a47a8cf09"
+  },
+  "name": "Sat",
+  "password": "J#4",
+  "email": "Sat@gmail.com",
+  "movie_reserved": {
+    "04/12/2023": {
+      "KGF": [
+        1
+      ]
+    },
+    "07/12/2023": {
+      "Kanthaara": [
+        1,
+        2
+      ]
+    }
+  },
+  "book_count": 2
+}]

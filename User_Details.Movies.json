@@ -1,0 +1,99 @@
+[{
+  "_id": {
+    "$oid": "6551eba2de2dcf70e6d15a58"
+  },
+  "Name": "KGF",
+  "seats_available": {
+    "03/12/2023": [
+      [
+        0
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        34,
+        56
+      ],
+      [
+        23,
+        34
+      ],
+      [
+        5,
+        6
+      ]
+    ],
+    "04/12/2023": [
+      [
+        1
+      ]
+    ],
+    "09/12/2023": [
+      [
+        1,
+        2
+      ]
+    ],
+    "10/12/2023": [
+      [
+        1,
+        28,
+        64
+      ]
+    ]
+  }
+},
+{
+  "_id": {
+    "$oid": "6562d10ff8a765a29feee00d"
+  },
+  "Name": "Kanthaara",
+  "seats_available": {
+    "07/12/2023": [
+      [
+        1,
+        2
+      ]
+    ]
+  }
+},
+{
+  "_id": {
+    "$oid": "6562d1d1f8a765a29feee00f"
+  },
+  "Name": "Chain Kuli Ki Mainkuli",
+  "seats_available": {}
+},
+{
+  "_id": {
+    "$oid": "6562d1f5f8a765a29feee010"
+  },
+  "Name": "Chak De India",
+  "seats_available": {}
+},
+{
+  "_id": {
+    "$oid": "6562d213f8a765a29feee011"
+  },
+  "Name": "Kingsman",
+  "seats_available": {
+    "10/12/2023": [
+      [
+        1,
+        28,
+        64
+      ],
+      [
+        2,
+        3,
+        9
+      ]
+    ]
+  }
+}]
