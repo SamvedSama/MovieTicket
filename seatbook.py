@@ -1,5 +1,5 @@
 import time
-import requi,login,reserve,trans
+import requi,login,reserve,trans,ticket
 booked_seats =[]
 def check(y):
     x = requi.movies.find_one({'Name':reserve.M_name})
@@ -33,6 +33,7 @@ def rebook_check(x):
         return x
     
 def seat_book():    
+    global dat,uname,M_name
     dat = login.date                                
     uname = login.uname
     M_name = reserve.M_name
@@ -68,6 +69,7 @@ def seat_book():
         else:
             break
     print("Enter Seat Numbers You Want To Reserve: ")                   
+    global num_seats
     num_seats=[]
     for i in range(num_of_seats):
         x  = int(input())
@@ -75,7 +77,7 @@ def seat_book():
             print("Wrong Seat Number Enter 1-64 ONLY: ")    
             x = int(input())
         else :
-            num_seats.append(x)   
+            num_seats.append(x)  
     num_seats = list(map(rebook_check,num_seats))  
     print("Seats for reserving: ",num_seats)
     stat_check=trans.pay(num_of_seats)
@@ -103,6 +105,7 @@ def seat_book():
         movie_seats[M_name]=seat_numbers
         d[dat] = movie_seats
         requi.collection.update_one({"name":(uname)},{'$set':{"movie_reserved":d}})  
+        ticket.ticket_gen()
         print("Seats Reserved")
         a = requi.movies.find_one({"Name":M_name})
         b = a["seats_available"]
