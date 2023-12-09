@@ -69,7 +69,7 @@ def finish_create():
     e=mail2.get()
     if b==c and d.endswith("@gmail.com") and d==e:
         notif1.config(fg="green",text="User created Successfully")
-        Create_screen.after(5000,Create_screen.destroy)
+        Create_screen.after(3000,Create_screen.destroy)
     else:
         notif1.config(fg="red",text="Either password entered or email doesnt match the criteria, please try again.")
         
