@@ -31,19 +31,16 @@ requi.myclient.close()
 #logs of each person in each persons field                              //Done
 # being able to book 1week b4                                           //Done 
 #check @gmail.com                                                       //Done
-
-#print ticket                                                           
-
+#print ticket                                                           //Done
 #think of multiple theatres                                             //Double comment think of this only when you are too jobless or suraj is willing to go manual labour
 #Reduce lines by importing modules                                      //Done fixed bugs also (alot)
 #ADD MULTIPLE DATES                                                     //Done 
+#make admin                                                             //Done
 
 
-
-#make admin                                                              
 #comment to self : try catch every input
-#requi to core
 
 
-#Future Work :
+#Future Work:
 #Display Genre
+#1,2,3 in display movies
