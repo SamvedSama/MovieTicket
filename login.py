@@ -1,5 +1,4 @@
-import requi,reserve,datetime
-
+import requi,reserve,datetime,admin
 def login_users():
     echeck = input("Enter Email you signed Up with: ")
     user = input("Please enter your name: ").lstrip().rstrip()
@@ -7,7 +6,10 @@ def login_users():
     query = {'name':user}
     x = requi.mydb.collection.find_one(query,{"_id":0})
     try:
-        if x['password']==pwd and echeck==x["email"]:
+        
+        if user == 'Admin' and pwd == '':
+            admin.admin()
+        elif x['password']==pwd and echeck==x["email"]:
             global uname,pass5
             uname = user
             pass5 = pwd
@@ -49,11 +51,11 @@ def book():
     print("Enter a date to book movies (book before midight for tomorrows show )")
     date = can_i_get_a_date()
     # Date only after 24 hours so if 3 todays date allow only 4 onwards
-    print("Please select number corresponding to the movie from the options given below to book a seat or 6 to exit: ")
-    movie_list = ["Kanthaara","KGF","Kingsman","Chain Kuli Ki Mainkuli","Chak De India"]
-    print("The movies available are: ")
-    for i in range(len(movie_list)):
-        print((i+1),".",movie_list[i])
+    x = requi.movies.find({},{"_id":0,"seats_available":0})
+    movie_list=[]
+    for i in x:
+        print(f'{i["Name"]}')
+        movie_list.append(i["Name"])
     try:
         ch = int(input("Enter your choice (1/2/3/4/5/6) here: "))
         if ch!=6 :
@@ -83,12 +85,6 @@ def view_bookings():
     except KeyError:
         print(f"No Seats Booked by {uname}")
      
-def display_movies():
-    requi.os.system("cls")
-    movie_list = ["Kanthaara","KGF","Kingsman","Chain Kuli Ki Mainkuli","Chak De India"]
-    print("The movies available are: ")
-    for i in range(len(movie_list)):
-            print((i+1),".",movie_list[i])
 
 def can_i_get_a_date():
     dat = input('Enter a date formatted as YYYY-MM-DD: ').split('-')
