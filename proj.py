@@ -4,9 +4,6 @@ from datetime import date,timedelta
 
 class PaymentGateway:
     def process_payment(self, amount):
-        # Mock implementation for testing purposes
-        # In a real scenario, integrate with a payment gateway API
-        # Here, you can assume the payment is successful if the card number starts with '4' (Visa)
         return amount>0
 
 root=Tk()
