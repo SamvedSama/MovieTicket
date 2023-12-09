@@ -2,6 +2,11 @@ from tkinter import *
 import sys,requi,reserve,login
 from datetime import date,timedelta
 
+
+#Creating a user field wiht book count and all that shit 
+#Movie database in gui
+#
+
 class PaymentGateway:
     def process_payment(self, amount):
         # Mock implementation for testing purposes
@@ -65,11 +70,11 @@ def finish_create():
     global c
     global d
     global e
-    a=user.get()            #Username
-    b=password.get()        #Pass1
-    c=password2.get()       #Pass2
-    d=mail.get()            #Email1
-    e=mail2.get()           #Email2
+    a=user.get()                    #Username
+    b=password.get()                #Pass1
+    c=password2.get()               #Pass2
+    d=mail.get()                    #Email1
+    e=mail2.get()                   #Email2
     if b==c and d.endswith("@gmail.com") and d==e:
         notif1.config(fg="green",text="User created Successfully")
         Create_screen.after(1000,Create_screen.destroy)
