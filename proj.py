@@ -252,7 +252,7 @@ def proceed_to_seat_selection(movie_name,num_tickets):
         global book_date,booked_seats
         global selected_seats
         x = requi.movies.find_one({'Name':m_name})
-        seats_available= x["seats_available"]
+        seats_available= x["seats_available"]               #Gives all bookings done, which date they are done and the seats which were booked
         try : 
             global seats_day
             seats_day=seats_available[book_date]  
