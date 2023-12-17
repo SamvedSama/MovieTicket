@@ -1,6 +1,7 @@
 from tkinter import *
-import sys,requi,reserve,login,ticket,admin,datetime,random,string
+import sys,requi,datetime,random,string
 from datetime import date,timedelta
+from PIL import Image, ImageDraw, ImageFont
 
 
 #Creating a user field wiht book count and all that shit 
@@ -79,7 +80,7 @@ def finish_create():
         #updates new user in db
         date = requi.dat
         M_Reserved={}
-        c2 = requi.encrypt(password)
+        c2 = requi.encrypt(b)
         dic = {date:M_Reserved}
         requi.mydb.collection.insert_one({'name':a,'password':c2,'email':e})
         requi.collection.update_one({"name":a},{'$set':{"movie_reserved": dic }})
@@ -125,23 +126,104 @@ def finish_login():
     a1=usr.get()
     a2=pwd.get()
     a3=fmail.get()
-    x = requi.mydb.collection.find_one({'name':a1},{"_id":0})
-    b = x["password"]
-    d = x["email"]
-    if a1==[x["name"]] and a2==b and a3==d:
-        notif2.config(fg="green",text="Login Successful")
+    
+    if a1=="Admin" and a2=="sairam" and a3=="sairam@gmail.com":
+        notif2.config(fg="green",text="Welcome, Admin")
         Login_screen.destroy()
-        global acct_dashboard
-        acct_dashboard=Toplevel(root)
-        acct_dashboard.title("Account dashboard")
-        Label(acct_dashboard,text="Select your choice from the given below:",font=('Calibri',12)).grid(row=0,sticky=N)
-        Button(acct_dashboard,text="Book a ticket",command=book,padx=20).grid(row=2)
-        Button(acct_dashboard,text="View booked tickets",padx=20).grid(row=3)#make viewbooked
-        Button(acct_dashboard,text="Logout",command=Logout,padx=20).grid(row=4)
-    elif a1=="Admin" and a2=='':
-        admin.admin()
-    else:
-        notif2.config(fg="red",text="Invalid username or password! Try again")
+        global admin_dash
+        admin_dash=Toplevel(root)
+        admin_dash.title("Admin Dashboard")
+        Label(admin_dash,text="Logged in as admin",font=('Calibri',12)).grid(row=0)
+        Button(admin_dash,text="Show Movies",command=Display,padx=20).grid(row=2)
+        Button(admin_dash,text="Add movies",command=add_mov,padx=20).grid(row=3)
+        Button(admin_dash,text="Delete movies",command=del_mov,padx=20).grid(row=4)
+        Button(admin_dash,text="Logout as admin",command=Exit,padx=20).grid(row=5)
+
+    else :  
+        x = requi.mydb.collection.find_one({'name':a1},{"_id":0})
+        b = x["password"]
+        d = x["email"]
+        encpwd=requi.encrypt(a2)   
+
+        if a1==x["name"] and encpwd==b and a3==d:
+            notif2.config(fg="green",text="Login Successful")
+            Login_screen.destroy()
+            acct_dashboard=Toplevel(root)
+            acct_dashboard.title("Account dashboard")
+            Label(acct_dashboard,text="Select your choice from the given below:",font=('Calibri',12)).grid(row=0,sticky=N)
+            Button(acct_dashboard,text="Book a ticket",command=book,padx=20).grid(row=2)
+            Button(acct_dashboard,text="View booked tickets",command=view_bookings,padx=20).grid(row=3)#make viewbooked
+            Button(acct_dashboard,text="Logout",command=Logout,padx=20).grid(row=4)
+        
+        
+        else:
+            notif2.config(fg="red",text="Invalid username or password! Try again")
+    
+
+def view_bookings():
+    global date_var
+    y = requi.collection.find_one({'name':a1})
+    viewbook=Toplevel(root)
+    viewbook.title("View Bookings")
+    Label(viewbook,text="Select the Date You want to check your movies for ",font=('Çalibri',12)).grid(row=0)
+    try:
+        if y['movie_reserved']=="":
+            print(f"No Seats Booked By {a1}")
+        else:
+            date_var = StringVar()
+            tomorrow= date.today()+timedelta(days=1)
+            date_options=[tomorrow+timedelta(days=i) for i in range(7)]
+            date_dropdown = OptionMenu(viewbook, date_var, *date_options,command=date_var_select)
+            date_dropdown.grid(row=3, column=1)
+            z=y['movie_reserved']
+            Label(viewbook,text=f"Movie reserved by {a1} is {z[book_date]}",font=('Çalibri',12)).grid(row=4)
+    except KeyError:
+        Label(viewbook,text=f"No Seats Booked by {a1}",font=('Çalibri',12)).grid(row=4)
+def mov():
+        admin_mov=Toplevel(root)
+        admin_mov.title("Display movies")
+        for i in movie_options:
+            Label(admin_mov,text=i,font=('Çalibri',12)).grid(row=movie_options.index(i)+1)
+
+def add_mov():
+    global ad_mov
+    ad_mov=Toplevel(root)
+    ad_mov.title("Add movies")
+    Label(ad_mov,text="Add movies here",font=('Çalibri',12)).grid(row=0)
+    Label(ad_mov,text="Enter the movie u want to add:",font=('Çalibri',12)).grid(row=2,column=0)
+    global x 
+    x=StringVar()
+    Entry(ad_mov,text=x,width=20).grid(row=2,column=1)
+    global movi
+    
+    Button(ad_mov,text="Add",padx=20,command=add_here).grid(row=4)
+    # movie_options.append(movi)
+    #for i in movie_options:
+        #Label(ad_mov,text=i,font=('Çalibri',12)).grid(row=movie_options.index(i))
+
+def del_mov():
+    global dell_mov
+    dell_mov=Toplevel(root)
+    dell_mov.title("Delete movies")
+    Label(dell_mov,text="Delete movies here")
+    Label(dell_mov,text="Enter the movie u want to delete:",font=('Çalibri',12)).grid(row=2,column=0)
+    global y 
+    y=StringVar()
+    Entry(dell_mov,text=y,width=20).grid(row=2,column=1)
+    global m_del
+    
+    Button(dell_mov,text="Delete",padx=20,command=delete_here).grid(row=4)
+
+def delete_here():
+    m_del=y.get()
+    if m_del in movie_options:
+            requi.movies.delete_one({"Name":m_del})
+            Label(dell_mov,fg="green",text=f"{m_del} has been removed").grid(row=5)
+    else :  Label(dell_mov,fg="red",text=f"{m_del} does not exist").grid(row=5)
+def add_here():
+    movi=x.get()
+    requi.movies.insert_one({'Name':movi ,"seats_available" : {} })    
+    Label(ad_mov,fg="green",text=f"{movi} has been added").grid(row=5)
 
 def Display():
     global Display_screen
@@ -173,7 +255,7 @@ def proceed_to_seat_selection(movie_name,num_tickets):
     selected_seats=[]  # Set to store selected seat numbers
 
     def check(y):
-        global m_name,book_date
+        global book_date,booked_seats
         global selected_seats
         x = requi.movies.find_one({'Name':m_name})
         seats_available= x["seats_available"]
@@ -184,7 +266,6 @@ def proceed_to_seat_selection(movie_name,num_tickets):
             seats_available[book_date] = [[0]]
             seats_day = seats_available[book_date]
         s=seats_day
-        global booked_seats
         l1 =[]
         for i in range(len(s)) :
             for j in s[i]:
@@ -198,6 +279,7 @@ def proceed_to_seat_selection(movie_name,num_tickets):
 
     def toggle_seat(seat_number):
         global selected_seats
+        selected_seats=list(selected_seats)
         if seat_number in selected_seats:
             buttons[seat_number-1].config(state='normal',bg='SystemButtonFace',command=lambda num=seat_number: toggle_seat(num))
             selected_seats.remove(seat_number)
@@ -221,20 +303,14 @@ def proceed_to_seat_selection(movie_name,num_tickets):
             col_index=0
 
     def pay_now():
-        global num_seats
         if len(selected_seats)!=num_tickets:
             Label(Proceed_screen,text=f"Please select {num_tickets} seats.",font=('Calibri', 12),
                   fg="red").grid(row=12)
         else:
             # Mock implementation of payment processing
             # payment_gateway=PaymentGateway()
-            payment_gateway = pay(num_seats)
-            if payment_gateway["transaction_status"]==True:
-                update_db()
-                # Add code here to store the booking details or update a database
-            else:
-                Label(Proceed_screen,text="Payment failed.There was an error! Please try again", font=('Calibri', 12),
-                      fg="red").grid(row=12)
+            pay(num_tickets)
+            
 
     def cancel_selection():
         global selected_seats   # used for referring to a variable in the nearest outer scope
@@ -249,36 +325,65 @@ def proceed_to_seat_selection(movie_name,num_tickets):
 
 def book():
     global Book_screen,book_date,num_seats
-    global m_name,movie_options
+    global m_name,movie_options                 #not accessing data from drop down
     movie_options = []
     Book_screen = Toplevel(root)
     Book_screen.title("Bookings")
     Label(Book_screen, text=f"Logged in as {a1}", font=('Calibri', 12)).grid(row=0)
     Label(Book_screen, text="Select Movie:", font=('Calibri', 12)).grid(row=1)
+    global movie_var
     movie_var = StringVar()
     buffer_movie=requi.movies.find({},{"_id":0,"seats_available":0})                    #Accessing db and showing moves in db for dropdown
     for i in buffer_movie:
         for key in i:
             movie_options.append(i[key])
-    movie_var.set(movie_options[0])
-    movie_dropdown = OptionMenu(Book_screen, movie_var, *movie_options)
+    # movie_var.set(movie_options[0])
+    movie_dropdown = OptionMenu(Book_screen, movie_var, *movie_options,command=movie_name_select)
     movie_dropdown.grid(row=1, column=1)
-    m_name = movie_var.get()    #User movie selection
+    # m_name=movie_var.get() 
+    # print(m_name)
     Label(Book_screen, text="Select number of tickets:", font=('Calibri', 12)).grid(row=2)
+    
+    global num_tickets_var
     num_tickets_var = IntVar()
-    num_tickets_var.set(1)
+    # num_tickets_var.set(1)
     
     num_tickets_options = [i for i in range(1, 9)]  # 1 to 8 tickets
-    num_tickets_dropdown = OptionMenu(Book_screen, num_tickets_var, *num_tickets_options)
+    num_tickets_dropdown = OptionMenu(Book_screen, num_tickets_var, *num_tickets_options,command=num_tickets_select)
     num_tickets_dropdown.grid(row=2, column=1)
-    num_seats = num_tickets_var.get()
+    # num_seats = num_tickets_var.get()
+    # print(num_seats)
     Label(Book_screen, text="Enter the date you want to watch it on:", font=('Calibri', 12)).grid(row=3)
+    global date_var
     date_var = StringVar()
     tomorrow= date.today()+timedelta(days=1)
-    date_var.set(tomorrow)
+    # date_var.set(tomorrow)
     date_options=[tomorrow+timedelta(days=i) for i in range(7)]
-    date_dropdown = OptionMenu(Book_screen, date_var, *date_options)
+    date_dropdown = OptionMenu(Book_screen, date_var, *date_options,command=date_var_select)
     date_dropdown.grid(row=3, column=1)
+    # book_date = date_var.get()
+    # global book_date
+    # l1 = ""
+    # book_date = book_date.split("-")
+    # for i in book_date[::-1]:
+    #     l1 += i + '/'
+    # l1 = l1[0:-1]
+    # book_date = l1
+
+    # Button to proceed to seat selection
+    proceed_button = Button(Book_screen, text="Proceed to seat selection",command=lambda: proceed_to_seat_selection(m_name, 
+                                               num_seats)).grid(row=6)
+def movie_name_select(_=None):
+    global m_name
+    m_name = movie_var.get()
+    
+def num_tickets_select(_=None):
+    global num_seats
+    num_seats = num_tickets_var.get()
+    
+
+def date_var_select(_=None):
+    global book_date
     book_date = date_var.get()
     l1 = ""
     book_date = book_date.split("-")
@@ -286,12 +391,7 @@ def book():
         l1 += i + '/'
     l1 = l1[0:-1]
     book_date = l1
-    
 
-
-    # Button to proceed to seat selection
-    proceed_button = Button(Book_screen, text="Proceed to seat selection",command=lambda: proceed_to_seat_selection(movie_var.get(), 
-                                               num_tickets_var.get())).grid(row=6)
 
 def Logout():
     Logout_screen=Toplevel(root)
@@ -303,7 +403,7 @@ def Exit():
     print("Successfully logged out")
     sys.exit()
 def update_db():
-        global a1,book_date,m_name,selected_seats
+        global a1,book_date,selected_seats
         num_seats = selected_seats
         uname=a1
         dat=book_date
@@ -325,57 +425,80 @@ def update_db():
         movie_seats[M_name]=seat_numbers
         d[dat] = movie_seats
         requi.collection.update_one({"name":(uname)},{'$set':{"movie_reserved":d}})  
-        ticket.ticket_gen()
-        print("Seats Reserved")
+        # ticket.ticket_gen()
         a = requi.movies.find_one({"Name":M_name})
         b = a["seats_available"]
         try :
-            c = b[login.date]
+            c = b[book_date]
         except KeyError:
-            b[login.date]=[]
-            c = b[login.date]
+            b[book_date]=[]
+            c = b[book_date]
         c.append(num_seats)
-        b[login.date]=c
+        b[book_date]=c
         y = requi.movies.find_one({'Name':M_name})                                          
         requi.movies.update_one({'Name':M_name},{'$set':{'seats_available' : b}})
         requi.collection.update_one({"name":uname},{'$inc':{"book_count": 1 }})
+        Label(ask_screen,text=f"Tickets Successfully booked close all windows and relogin to check booked seats",font=('Calibri', 12),fg="green").grid(row=3)
 def pay(seat_num):
     ticket_price = 500
-    global total_cost,status
+    global total_cost
     total_cost = seat_num * ticket_price
-    x = requi.collection.find_one({'name':login.uname})
+    x = requi.collection.find_one({'name':a1})
+
+    global ask_screen
+    ask_screen=Toplevel(root)
+    ask_screen.title("Confirmation")
     try:
         if x["book_count"]>=5 and x["book_count"]<15:
             total_cost = 0.95*total_cost
-            Label(Proceed_screen,text="5% Discount applied ",font=('Calibri', 12),fg="green").grid(row=12)             
+            Label(ask_screen,text="5% Discount applied ",font=('Calibri', 12),fg="green").grid(row=1)             
         elif x["book_count"]>=15:
             total_cost = 0.8*total_cost
-            Label(Proceed_screen,text="20% Discount applied ",font=('Calibri', 12),fg="green").grid(row=12) 
+            Label(ask_screen,text="20% Discount applied ",font=('Calibri', 12),fg="green").grid(row=2) 
     except KeyError:
         pass
-    
-    #INSERT RADIO BUTTON BS
+    Label(ask_screen,text=f"Amount Payable is {total_cost} ",font=('Calibri', 12),fg="green").grid(row=0)
+    Button(ask_screen,text="Yes",command=generate_random_transaction).grid(row=1)
+    Button(ask_screen,text="No",command=No).grid(row=2)
+     
+def ticket_gen():    #Change from seatbook to gui
+    ticket_width = 400
+    ticket_height = 500
+    ticket_color = "white"
+    ticket = Image.new("RGB",(ticket_width, ticket_height), ticket_color)
+    draw = ImageDraw.Draw(ticket)
+    text_color = "black"
+    font = ImageFont.truetype("arial.ttf", 20) 
+    user = a1
+    date = book_date
+    movie_name = m_name
+    email = a3
+    seat_number = ''
+    for i in list(selected_seats):
+        seat_number += str(i)+ ','
+    seat_number=seat_number[:-1]
+    ticket_info = f"----------- Welcome to Bookito ----------\n----------- Reservation System ----------\n\nCustomer Name :{user}\nEmail : {email} \nDate : {date}\n\n============================\n\nMovie: {movie_name}\nSeat: {seat_number}\n\n============================\n\n       Thank You For Choosing Us \n               Enjoy Your Movie"
+    text_position = (20, 50) 
+    draw.text(text_position, ticket_info, fill=text_color, font=font)
+    ticket.save("movie_ticket.png") 
 
-    Label(Proceed_screen,text=f"Amount Payable is {total_cost} ",font=('Calibri', 12),fg="green").grid(row=12) 
-    
-    
-    print("Proceed with payment ?(Y/N/Yes/No) ")
-    choice=input()
-    if choice.lower() in "yyes":
-        status=True
-    else:
-        status=False
-    return generate_random_transaction()
-
-
-
-
+def No():
+    Label(ask_screen,text="Payment Cancelled", font=('Calibri', 0),
+                      fg="red").grid(row=3)
 def generate_random_transaction():
-    global status
+    global transaction_data
     transaction_id = ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
     amount = total_cost
-    transaction_data = {"transaction_id": transaction_id,"amount": amount,"transaction_date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),"transaction_status":status}
-    return transaction_data
+    transaction_data = {"transaction_id": transaction_id,"amount": amount,"transaction_date": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),"transaction_status":True}
+    if transaction_data["transaction_status"]==True:
+                
+                ticket_gen()
+                
+                update_db()
+                # Add code here to store the booking details or update a database
+    else:
+        Label(ask_screen,text="Payment failed.There was an error! Please try again", font=('Calibri', 12),
+                fg="red").grid(row=12)
 
 
 myButton1=Button(root,text="Create user",padx=20,command=Create)
