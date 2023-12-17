@@ -174,7 +174,8 @@ def view_bookings_final():
     l1 = l1[0:-1]
     book_date = l1
     try:
-        Label(viewbook,text=f"Seats Booked by {a1} are {z[book_date]}",font=('Çalibri',12)).grid(row=6)
+        rec = z[book_date]
+        Label(viewbook,text=f"Seats Booked by {a1} are {rec[1:-1]}",font=('Çalibri',12)).grid(row=6)
     except KeyError:
         Label(viewbook,text=f"No Seats Booked by {a1}",font=('Çalibri',12)).grid(row=6)
             
