@@ -224,7 +224,6 @@ def add_here():
 
 def Display():
     global Display_screen
-    requi.os.system("cls")
     global movie_options
     Display_screen=Toplevel(root)
     Display_screen.title("Display movies")
