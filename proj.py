@@ -3,19 +3,26 @@ import sys,requi,datetime,random,string
 from datetime import date,timedelta
 from PIL import Image, ImageDraw, ImageFont
 
+
 root=Tk()
-root.geometry("300x300")
+root.geometry("2000x1000")
+MyLabel4=Label(root,text="\n").pack()
 root.title("Welcome to Bookito: A one stop solution to ticket booking")
-MyLabel=Label(root,text="Welcome to Bookito").pack()
-MyLabel1=Label(root,text="Follow the below instructions for smooth user experience").pack()
-MyLabel2 = Label(root,text="Please select one of the following options to proceed ").pack()
+MyLabel3=Label(root,text="\n").pack()
+MyLabel=Label(root,text="Welcome to Bookito",font=('Verdana',25,'bold')).pack()
+MyLabel3=Label(root,text="\n").pack()
+MyLabel1=Label(root,text="Follow the below instructions for smooth user experience",font=('Helvetica',20,'bold')).pack()
+MyLabel3=Label(root,text="\n").pack()
+MyLabel2 = Label(root,text="Please select one of the following options to proceed ",font=('Helvetica',20,'bold')).pack()
+MyLabel3=Label(root,text="\n").pack()
 MyLabel3=Label(root,text="\n").pack()
 
 def Create():
     global Create_screen
     Create_screen=Toplevel(root)
+    Create_screen.geometry("400x350")
     Create_screen.title("Create user")
-    l=Label(Create_screen,text="Create your account here",font=('Çalibri',12))
+    l=Label(Create_screen,text="Create your account here",font=('Çalibri',12,'bold'))
     l.grid(row=0,sticky=N)
     l1=Label(Create_screen,text="Please enter your name:",font=('Çalibri',12))
     l1.grid(row=2,sticky=W)
@@ -47,11 +54,12 @@ def Create():
     e4.grid(row=5,column=2)
     e5=Entry(Create_screen,text=password2,show='*',width=20)
     e5.grid(row=6,column=2)
-    b1=Button(Create_screen,text="Create",command=finish_create,padx=30)
+    b1=Button(Create_screen,text="Create",command=finish_create,padx=30,font=('Georgia',10,'bold'))
     b1.grid(row=8)
     global notif1
     notif1=Label(Create_screen,font=('Calibri',12))
     notif1.grid(row=10,sticky=N)
+
 
 def finish_create():
     global a
@@ -59,11 +67,11 @@ def finish_create():
     global c
     global d
     global e,M_Reserved
-    a=user.get()                    #Username
-    b=password.get()                #Pass1
-    c=password2.get()               #Pass2
-    d=mail.get()                    #Email1
-    e=mail2.get()                   #Email2
+    a=user.get()                                                                #Username
+    b=password.get()                                                            #Pass1
+    c=password2.get()                                                           #Pass2
+    d=mail.get()                                                                #Email1
+    e=mail2.get()                                                               #Email2
     if b==c and d.endswith("@gmail.com") and d==e:
         #updates new user in db
         date = requi.dat
@@ -83,7 +91,7 @@ def Login():
     global Login_screen
     Login_screen=Toplevel(root)
     Login_screen.title("Login page")
-    l=Label(Login_screen,text="Welcome to the login page",font=('Çalibri',12))
+    l=Label(Login_screen,text="Welcome to the login page",font=('Çalibri',12,'bold'))
     l.grid(row=0,sticky=N)
     l1=Label(Login_screen,text="Enter Username:",font=('Çalibri',12))
     l1.grid(row=2,sticky=W)
@@ -106,7 +114,7 @@ def Login():
     global notif2
     notif2=Label(Login_screen,font=('Calibri',12))
     notif2.grid(row=7,sticky=N)
-    b1=Button(Login_screen,text="Login",command=finish_login,padx=30)
+    b1=Button(Login_screen,text="Login",command=finish_login,padx=30,font=('Georgia',10,'bold'))
     b1.grid(row=5)
 
 def finish_login():
@@ -121,9 +129,9 @@ def finish_login():
         admin_dash=Toplevel(root)
         admin_dash.title("Admin Dashboard")
         Label(admin_dash,text="Logged in as admin",font=('Calibri',12)).grid(row=0)
-        Button(admin_dash,text="Show Movies",command=Display,padx=20).grid(row=2)
-        Button(admin_dash,text="Add movies",command=add_mov,padx=20).grid(row=3)
-        Button(admin_dash,text="Delete movies",command=del_mov,padx=20).grid(row=4)
+        Button(admin_dash,text="Show Movies",command=Display,padx=20,font=('Georgia',10,'bold')).grid(row=2)
+        Button(admin_dash,text="Add movies",command=add_mov,padx=20,font=('Georgia',10,'bold')).grid(row=3)
+        Button(admin_dash,text="Delete movies",command=del_mov,padx=20,font=('Georgia',10,'bold')).grid(row=4)
         Button(admin_dash,text="Logout as admin",command=Exit,padx=20).grid(row=5)
     else :  
         x = requi.mydb.collection.find_one({'name':a1},{"_id":0})
@@ -137,9 +145,9 @@ def finish_login():
             acct_dashboard=Toplevel(root)
             acct_dashboard.title("Account dashboard")
             Label(acct_dashboard,text="Select your choice from the given below:",font=('Calibri',12)).grid(row=0,sticky=N)
-            Button(acct_dashboard,text="Book a ticket",command=book,padx=20).grid(row=2)
-            Button(acct_dashboard,text="View booked tickets",command=view_bookings,padx=20).grid(row=3)#make viewbooked
-            Button(acct_dashboard,text="Logout",command=Logout,padx=20).grid(row=4)        
+            Button(acct_dashboard,text="Book a ticket",command=book,padx=20,font=('Georgia',10,'bold')).grid(row=2)
+            Button(acct_dashboard,text="View booked tickets",command=view_bookings,padx=20,font=('Georgia',10,'bold')).grid(row=3)#make viewbooked
+            Button(acct_dashboard,text="Logout",command=Logout,padx=20,font=('Georgia',10,'bold')).grid(row=4)        
         else:
             notif2.config(fg="red",text="Invalid username or password! Try again")
     
@@ -149,7 +157,7 @@ def view_bookings():
     y = requi.collection.find_one({'name':a1})
     viewbook=Toplevel(root)
     viewbook.title("View Bookings")
-    Label(viewbook,text="Select the Date You want to check your movies for ",font=('Çalibri',12)).grid(row=0)
+    Label(viewbook,text="Select the Date You want to check your movies for ",font=('Çalibri',12,'bold')).grid(row=0)
     try:
         if y['movie_reserved']=="":
             print(f"No Seats Booked By {a1}")
@@ -160,7 +168,7 @@ def view_bookings():
             date_dropdown = OptionMenu(viewbook, date_var, *date_options,command=date_var_select)
             date_dropdown.grid(row=3, column=1)
             z=y['movie_reserved']
-            Button(viewbook,text="View Seats",command=view_bookings_final,padx=20).grid(row=4)
+            Button(viewbook,text="View Seats",command=view_bookings_final,padx=20,font=('Georgia',10,'bold')).grid(row=4)
     except KeyError:
         Label(viewbook,text=f"No Seats Booked by {a1}",font=('Çalibri',12)).grid(row=4)
         
@@ -174,7 +182,7 @@ def view_bookings_final():
     l1 = l1[0:-1]
     book_date = l1
     try:
-        rec = z[book_date]
+        rec = str(z[book_date])
         Label(viewbook,text=f"Seats Booked by {a1} are {rec[1:-1]}",font=('Çalibri',12)).grid(row=6)
     except KeyError:
         Label(viewbook,text=f"No Seats Booked by {a1}",font=('Çalibri',12)).grid(row=6)
@@ -195,7 +203,7 @@ def add_mov():
     x=StringVar()
     Entry(ad_mov,text=x,width=20).grid(row=2,column=1)
     global movi
-    Button(ad_mov,text="Add",padx=20,command=add_here).grid(row=4)
+    Button(ad_mov,text="Add",padx=20,command=add_here,font=('Georgia',10,'bold')).grid(row=4)
 
 
 def del_mov():
@@ -208,7 +216,7 @@ def del_mov():
     y=StringVar()
     Entry(dell_mov,text=y,width=20).grid(row=2,column=1)
     global m_del
-    Button(dell_mov,text="Delete",padx=20,command=delete_here).grid(row=4)
+    Button(dell_mov,text="Delete",padx=20,command=delete_here,font=('Georgia',10,'bold')).grid(row=4)
 
 def delete_here():
     m_del=y.get()
@@ -228,7 +236,7 @@ def Display():
     global movie_options
     Display_screen=Toplevel(root)
     Display_screen.title("Display movies")
-    l=Label(Display_screen,text="The Movies available are:",font=('Çalibri',12))
+    l=Label(Display_screen,text="The Movies available are:",font=('Çalibri',12,'bold'))
     l.grid(row=0,sticky=N)
     movie_options=[]
     buffer_movie=requi.movies.find({},{"_id":0,"seats_available":0})                    #Accessing db and showing moves in db for dropdown
@@ -308,8 +316,8 @@ def proceed_to_seat_selection(movie_name,num_tickets):
             buttons[seat_number-1].config(state='normal',bg='SystemButtonFace',command=lambda num=seat_number: toggle_seat(num))
         selected_seats=set()
     # Buttons for payment and cancellation
-    Button(Proceed_screen,text="Pay Now",command=pay_now).grid(row=11, column=0)
-    Button(Proceed_screen,text="Cancel",command=cancel_selection).grid(row=11, column=1)
+    Button(Proceed_screen,text="Pay Now",command=pay_now,font=('Georgia',10,'bold')).grid(row=11, column=0)
+    Button(Proceed_screen,text="Cancel",command=cancel_selection,font=('Georgia',10,'bold')).grid(row=11, column=1)
     
 def book():
     global Book_screen,book_date,num_seats
@@ -341,7 +349,7 @@ def book():
     date_dropdown = OptionMenu(Book_screen, date_var, *date_options,command=date_var_select)
     date_dropdown.grid(row=3, column=1)
     proceed_button = Button(Book_screen, text="Proceed to seat selection",command=lambda: proceed_to_seat_selection(m_name, 
-                                               num_seats)).grid(row=6)
+                                               num_seats,font=('Georgia',10,'bold'))).grid(row=6)
 def movie_name_select(_=None):
     global m_name
     m_name = movie_var.get()
@@ -426,8 +434,8 @@ def pay(seat_num):
     except KeyError:
         pass
     Label(ask_screen,text=f"Amount Payable is {total_cost} ",font=('Calibri', 12),fg="green").grid(row=0)
-    Button(ask_screen,text="Yes",command=generate_random_transaction).grid(row=1)
-    Button(ask_screen,text="No",command=No).grid(row=2)
+    Button(ask_screen,text="Yes",command=generate_random_transaction,font=('Georgia',10,'bold')).grid(row=1)
+    Button(ask_screen,text="No",command=No,font=('Georgia',10,'bold')).grid(row=2)
      
 def ticket_gen():    #Change from seatbook to gui
     ticket_width = 400
@@ -467,12 +475,16 @@ def generate_random_transaction():
         Label(ask_screen,text="Payment failed.There was an error! Please try again", font=('Calibri', 12),
                 fg="red").grid(row=12)
 
-myButton1=Button(root,text="Create user",padx=20,command=Create)
+myButton1=Button(root,text="Create user",padx=35,command=Create,font=('Georgia',10,'bold'))
 myButton1.pack()
-myButton2=Button(root,text="Login",padx=20,command=Login)
+MyLabel3=Label(root,text="\n").pack()
+myButton2=Button(root,text="Login",padx=40,command=Login,font=('Georgia',10,'bold'))
 myButton2.pack()
-myButton3=Button(root,text="Display movies list",padx=20,command=Display)
+MyLabel3=Label(root,text="\n").pack()
+myButton3=Button(root,text="Display movies list",padx=15,command=Display,font=('Georgia',10,'bold'))
 myButton3.pack()
-myButton4=Button(root,text="Exit",padx=20,command=Exit)
+MyLabel3=Label(root,text="\n").pack()
+myButton4=Button(root,text="Exit",padx=40,command=Exit,font=('Georgia',10,'bold'))
 myButton4.pack()
+MyLabel3=Label(root,text="\n").pack()
 root.mainloop()
