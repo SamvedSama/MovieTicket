@@ -163,6 +163,7 @@ def view_bookings():
             Button(viewbook,text="View Seats",command=view_bookings_final,padx=20).grid(row=4)
     except KeyError:
         Label(viewbook,text=f"No Seats Booked by {a1}",font=('Çalibri',12)).grid(row=4)
+        
 def view_bookings_final():
     global book_date
     selected_date=str(date_var.get())
@@ -237,6 +238,7 @@ def Display():
     for i in range(len(movie_options)):
         l=Label(Display_screen,text=movie_options[i],font=('Çalibri',12))
         l.grid(row=i+1,sticky=W)
+        
 def proceed_to_seat_selection(movie_name,num_tickets):
     global Proceed_screen,m_name,selected_seats
     Proceed_screen=Toplevel(root)
@@ -246,6 +248,7 @@ def proceed_to_seat_selection(movie_name,num_tickets):
     col_index=0
     buttons=[]  # List to store references to the seat buttons
     selected_seats=[]  # Set to store selected seat numbers
+    
     def check(y):
         global book_date,booked_seats
         global selected_seats
@@ -291,12 +294,14 @@ def proceed_to_seat_selection(movie_name,num_tickets):
         if col_index==8:
             row_index+=1
             col_index=0
+            
     def pay_now():
         if len(selected_seats)!=num_tickets:
             Label(Proceed_screen,text=f"Please select {num_tickets} seats.",font=('Calibri', 12),
                   fg="red").grid(row=12)
         else:
             pay(num_tickets)
+            
     def cancel_selection():
         global selected_seats   # used for referring to a variable in the nearest outer scope
         for seat_number in selected_seats:
@@ -305,6 +310,7 @@ def proceed_to_seat_selection(movie_name,num_tickets):
     # Buttons for payment and cancellation
     Button(Proceed_screen,text="Pay Now",command=pay_now).grid(row=11, column=0)
     Button(Proceed_screen,text="Cancel",command=cancel_selection).grid(row=11, column=1)
+    
 def book():
     global Book_screen,book_date,num_seats
     global m_name,movie_options                 #not accessing data from drop down
@@ -339,9 +345,11 @@ def book():
 def movie_name_select(_=None):
     global m_name
     m_name = movie_var.get()
+    
 def num_tickets_select(_=None):
     global num_seats
     num_seats = num_tickets_var.get()
+    
 def date_var_select(_=None):
     global book_date
     book_date = date_var.get()
@@ -398,6 +406,7 @@ def update_db():
         requi.movies.update_one({'Name':M_name},{'$set':{'seats_available' : b}})
         requi.collection.update_one({"name":uname},{'$inc':{"book_count": 1 }})
         Label(ask_screen,text=f"Tickets Successfully booked close all windows and relogin to check booked seats",font=('Calibri', 12),fg="green").grid(row=3)
+    
 def pay(seat_num):
     ticket_price = 500
     global total_cost
@@ -444,6 +453,7 @@ def ticket_gen():    #Change from seatbook to gui
 def No():
     Label(ask_screen,text="Payment Cancelled", font=('Calibri', 0),
                       fg="red").grid(row=3)
+    
 def generate_random_transaction():
     global transaction_data
     transaction_id = ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
