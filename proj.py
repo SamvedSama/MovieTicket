@@ -55,7 +55,7 @@ def Create():
     e5=Entry(Create_screen,text=password2,show='*',width=20)
     e5.grid(row=6,column=2)
     b1=Button(Create_screen,text="Create",command=finish_create,padx=30,font=('Georgia',10,'bold'))
-    b1.grid(row=8)
+    b1.grid(row=9)
     global notif1
     notif1=Label(Create_screen,font=('Calibri',12))
     notif1.grid(row=10,sticky=N)
